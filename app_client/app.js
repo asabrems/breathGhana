@@ -4,12 +4,12 @@ function config ($routeProvider) {
         .when('/', {
             templateUrl: 'home/home.view.html',
             controller: 'homeCtrl',
-            controllerAs: 'vm'
+            //controllerAs: 'vm'
         })
         .otherwise({redirectTo: '/'});
 }
 angular
     .module('loc8rApp')
-    .service('loc8rData', loc8rData)
-    .service('geolocation', geolocation)
+    //.service('loc8rData', loc8rData)
+    //.service('geolocation', geolocation)
     .config(['$routeProvider', config]);

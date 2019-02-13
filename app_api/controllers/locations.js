@@ -3,7 +3,7 @@ var apiOptions = {
 server : "http://localhost:3000"
 };
 if (process.env.NODE_ENV === 'production') {
-apiOptions.server = "https://git.heroku.com/breathalyzer-ashesi.git";
+apiOptions.server = "https://tranquil-brushlands-88878.herokuapp.com/";
 }
 var mongoose = require('mongoose');
 var Loc = mongoose.model('Location');
