@@ -20,6 +20,6 @@ angular.module('loc8rApp', []);
 
 
 angular
-    .module('loc8rApp')
+    .module('Asantewaa')
     .controller('locationListCtrl', locationListCtrl)
     //.service('loc8rData',loc8rData);

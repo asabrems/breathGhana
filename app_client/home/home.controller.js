@@ -1,17 +1,19 @@
-angular
-    .module('loc8rApp')
-    .controller('homeCtrl', homeCtrl);
+(function(){
+    angular
+        .module('Asantewaa')
+        .controller('homeCtrl', homeCtrl);
 
-function homeCtrl ($scope) {
-    $scope.pageHeader = {
-        title: 'Loc8r',
-        strapline: 'Find places to work with wifi near you!'
-};
-$scope.sidebar = {
-    content: "Looking for wifi and a seat etc etc"
-  };
-}
-
+    function homeCtrl () {
+        var vm=this;
+        vm.pageHeader = {
+            title: 'Ghana Alcohol data',
+            strapline: 'Donot drink and drive'
+        };
+        vm.sidebar = {
+            content: "Looking for wifi and a seat etc etc"
+        };
+    }
+})();
 
 
 // angular

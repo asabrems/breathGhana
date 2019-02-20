@@ -7,9 +7,12 @@ var logger = require('morgan');
 var passport= require('passport');
 
 require('./app_server/models/db');
+var uglifyJs = require("uglify-js");
+var fs = require('fs');
+
 require('./app_api/models/db');
 require('./app_api/config/passport');
-require('./app_api/routes')(app);
+require('./app_api/routes');
 var indexRouter = require('./app_server/routes/index');
 var usersRouter = require('./app_server/routes/users');
 var routesApi = require('./app_api/routes/index');
@@ -18,7 +21,24 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname,'app_server', 'views'));
 app.set('view engine', 'jade');
-
+var appClientFiles = [
+  'app_client/app.js',
+  'app_client/home/home.controller.js',
+  //-'app_client/common/services/geolocation.service.js',
+  //'app_client/common/services/loc8rData.service.js',
+  'app_client/common/filters/formatDistance.filter.js',
+  'app_client/common/directive/ratingStars/ratingStars.directive.js',
+  'app_client/common/directive/footerGeneric.directive.js',
+  'app_client/common/directive/navigation.directive.js'
+];
+var uglified = uglifyJs.minify(appClientFiles, { compress : false });
+fs.writeFile('public/angular/loc8r.min.js', uglified.code, function (err){
+  if(err) {
+    console.log(err);
+  } else {
+    console.log('Script generated and saved: loc8r.min.js');
+  }
+});
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

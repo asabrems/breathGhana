@@ -1,5 +1,11 @@
 var mongoose = require( 'mongoose' );
 var gracefulShutdown;
+var mqtt=require('mqtt')  
+var mongodb=require('mongodb');  
+var mongodbClient=mongodb.MongoClient;  
+//var mongodbURI='mongodb://username:password@server.mongohq.com:port/database'  
+var deviceRoot="demo/device/"  
+var collection,client;
 var dbURI = 'mongodb://localhost/Loc8r';
 if (process.env.NODE_ENV === 'production') {
     dbURI = process.env.MONGOLAB_URI;

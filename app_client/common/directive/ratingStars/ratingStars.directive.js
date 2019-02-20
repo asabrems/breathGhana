@@ -1,5 +1,5 @@
 angular
-    .module('loc8rApp')
+    .module('Asantewaa')
     .directive('ratingStars', ratingStars);
 function ratingStars () {
     return {
