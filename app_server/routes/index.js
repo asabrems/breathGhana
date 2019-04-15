@@ -12,8 +12,8 @@ var ctrlCharts = require('../controllers/charts/chartJS/index.js');
 /* GET home page. */
 
 /* various web application pages*/
-router.get('/', ctrlLocations.homepage);
-router.get('/login', ctrlLocations.login);
+//router.get('/', ctrlLocations.homepage);
+router.get('/', ctrlLocations.login);
 router.get('/signup',ctrlLocations.signup);
 router.get('/work', ctrlLocations.work);
 //router.get('/graphs', ctrlCharts.charts);
