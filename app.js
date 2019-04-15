@@ -2,59 +2,48 @@ require('dotenv').load();
 var express = require('express');
 var createError = require('http-errors');
 var path = require('path');
-var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+//var favicon = require('serve-favicon');
+var bodyParser = require('body-parser');// this allows us to call auten into views
+
+//var uglifyJs = require("uglify-js");
+//var fs = require('fs');
 var passport= require('passport');
-
 require('./app_server/models/db');
-var uglifyJs = require("uglify-js");
-var fs = require('fs');
+require('./app_server/config/passport');
+require('./app_server/routes');
 
-require('./app_api/models/db');
-require('./app_api/config/passport');
-require('./app_api/routes');
-var indexRouter = require('./app_server/routes/index');
-var usersRouter = require('./app_server/routes/users');
-var routesApi = require('./app_api/routes/index');
+var routes = require('./app_server/routes/index');
+//var routesApi = require('./app_api/routes/index');
+//var users = require('./app_server/routes/users');
+
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname,'app_server', 'views'));
 app.set('view engine', 'jade');
-var appClientFiles = [
-  'app_client/app.js',
-  'app_client/home/home.controller.js',
-  //-'app_client/common/services/geolocation.service.js',
-  //'app_client/common/services/loc8rData.service.js',
-  'app_client/common/filters/formatDistance.filter.js',
-  'app_client/common/directive/ratingStars/ratingStars.directive.js',
-  'app_client/common/directive/footerGeneric.directive.js',
-  'app_client/common/directive/navigation.directive.js'
-];
-var uglified = uglifyJs.minify(appClientFiles, { compress : false });
-fs.writeFile('public/angular/loc8r.min.js', uglified.code, function (err){
-  if(err) {
-    console.log(err);
-  } else {
-    console.log('Script generated and saved: loc8r.min.js');
-  }
-});
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'app_client')));
+//app.use(express.static(path.join(__dirname, 'app_client')));
 app.use(passport.initialize());
-//app.use('/', routes);
-app.use('/api', routesApi);
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }))
+
+// Routes (recomment to get sign in details)
+app.use('/', routes);
+//app.use('/users', users);
+//app.use('/api', routesApi);
+
+/*app.use(function(req, res) {
+  res.sendfile(path.join(__dirname, 'app_server', 'index.html'));
+});*/
 
 
-app.use(function(req, res) {
-  res.sendfile(path.join(__dirname, 'app_client', 'index.html'));
-});
+
 // error handlers
 // Catch unauthorised errors
 app.use(function (err, req, res, next) {
@@ -78,6 +67,4 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
-
 module.exports = app;

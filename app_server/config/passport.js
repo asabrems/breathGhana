@@ -23,3 +23,4 @@ passport.use(new LocalStrategy({
     });
   }
 ));
+//-MONGOLAB_URI="mongodb+srv://author:josh26March!@cluster0-sncnz.mongodb.net/test?retryWrites=true"

@@ -1,43 +1,45 @@
 doctype html
-html(ng-app='Asantewaa')
+html
   head
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
     title= title
-    link(rel='stylesheet', href='/bootstrap/css/amelia.bootstrap.css')
+    link(rel='stylesheet', href='/bootstrap/css/bootstrap2.min.css') 
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
-    .navbar.navbar-default.navbar-fixed-top
-        .container
-            .navbar-header
-              a.navbar-brand(href='/') Sign up
-              button.navbar-toggle(type='button', data-toggle='collapse', data-target='#navbar-main')
-                  span.icon-bar
-                  span.icon-bar
-                  span.icon-bar
-            #navbar-main.navbar-collapse.collapse
-              ul.nav.navbar-nav
-                li
-                  a(href='/about/') About
+      nav.navbar.navbar-expand-lg.navbar-dark.bg-primary
+        a.navbar-brand BreathGhana
+        button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarColor01', aria-controls='navbarColor01', aria-expanded='true', aria-label='Toggle navigation')
+          span.navbar-toggler-icon
+        #navbarColor01.navbar-collapse.collapse.show(style='')
+          ul.navbar-nav.mr-auto
+            li.nav-item.active
+              if user
+                  li
+                    a(href='/dashboard') Dashbaord
+                  li
+                    a(href='/logout') Logout
+              else
+                  a.nav-link(href='/about')
+                    | About 
+                    span.sr-only (current)
+                li.nav-item
+                  a.nav-link(href='/login') Login
+          form.form-inline.my-2.my-lg-0
+            input.form-control.mr-sm-2(type='text', placeholder='Search')
+            button.btn.btn-secondary.my-2.my-sm-0(type='submit') Search
+
+                      
+      
+                    
 
     .container
-      div(ng-view)
         block content
 
       footer
           .row
             .col-xs-12
-              small &copy; Simon Holmes 2014
-      //-script(src='/angular/loc8r.min.js') 
-      script(src='/angular/angular.min.js')
-      script(src='/lib/angular-route.min.js')
-      script(src='/app_client/app.js')
-      script(src='/home/home.controller.js')
-      //-script(src='/angular/loc8rApp.js')
+              small &copy; Simon Holmes 2014 
+    script(src='/javascripts/jquery-3.3.1.min.js')
+    script(src='/bootstrap/js/bootstrap.min.js')
 
-      //-script(src='/common/services/loc8rData.service.js')
-      script(src='/javascripts/jquery-3.3.1.min.js')
-      script(src='/bootstrap/js/bootstrap.min.js')
-      script(src='/javascript/validation.js')
-      //- script(src='/common/services/geolocation.service.js')
-      //-script(src='/common/directive/ratingStars/ratingStars.directive.js')
-      //-script(src='/common/filters/formatDistance.filter.js')
+   

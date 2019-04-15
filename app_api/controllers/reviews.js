@@ -5,25 +5,27 @@ var sendJsonResponse = function(res, status, content) {
     res.json(content);
 };
 module.exports.reviewsCreate = function (req, res) {
+    getAuthor(req, res, function (req, res, userName) {
     var locationid = req.params.locationid;
-    if (locationid) {
-        Loc
-            .findById(locationid)
-            .select('reviews')
-            .exec(
-                function(err, location) {
-                    if (err) {
-                        sendJsonResponse(res, 400, err);
-                    } else {
-                        doAddReview(req, res, location);
+        if (req.params.locationid) {
+            Loc
+                .findById(locationid)
+                .select('reviews')
+                .exec(
+                    function(err, location) {
+                        if (err) {
+                            sendJsonResponse(res, 400, err);
+                        } else {
+                            doAddReview(req, res, location, userName);
+                        }
                     }
-                }
-            );
-        } else {
-            sendJsonResponse(res, 404, {
-                "message": "Not found, locationid required"
-            });
-    }
+                );
+            } else {
+                sendJsonResponse(res, 404, {
+                    "message": "Not found, locationid required"
+                });
+            }
+    });
 };
 module.exports.reviewsReadOne = function(req, res) {
     if (req.params && req.params.locationid && req.params.reviewid) {

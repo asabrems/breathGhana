@@ -21,3 +21,4 @@ var locationSchema = new mongoose.Schema({
         reviews: [reviewSchema]
         });
 mongoose.model('Location', locationSchema);
+// so in the database, information from the database will display on the page

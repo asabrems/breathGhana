@@ -3,13 +3,17 @@ var gracefulShutdown;
 var mqtt=require('mqtt')  
 var mongodb=require('mongodb');  
 var mongodbClient=mongodb.MongoClient;  
+require('./locations')
+require('./users')
 //var mongodbURI='mongodb://username:password@server.mongohq.com:port/database'  
-var deviceRoot="demo/device/"  
-var collection,client;
+//var mongodURI= 'mongodb+srv://author:<password>@cluster0-sncnz.mongodb.net/test?retryWrites=true'
 var dbURI = 'mongodb://localhost/Loc8r';
 if (process.env.NODE_ENV === 'production') {
     dbURI = process.env.MONGOLAB_URI;
 }
+/*var deviceRoot="asantewaa/init"
+var collection,client;*/
+
 mongoose.connect(dbURI);
 mongoose.connection.on('connected', function () {
     console.log('Mongoose connected to ' + dbURI);
@@ -44,4 +48,26 @@ process.on('SIGTERM', function() {
         process.exit(0);
     });
 });
-require('./locations');
+
+//mongodb data 
+/*mongodbClient.connect(dbURI,setupCollection);
+
+function setupCollection(err,db) {  
+  if(err) throw err;
+  collection = db.collection("users");
+  client=mqtt.createClient(1883,'localhost')
+  client.subscribe(deviceRoot+"+")
+  client.on('message', insertEvent);
+}
+function insertEvent(topic,payload) {  
+    var key=topic.replace(deviceRoot,'');
+    collection.update(  
+        { _id:key },
+        { $push: { events: { event: { value:payload, when:new Date() } } } },
+        { upsert:true },
+        function(err,docs) {
+        if(err) { console.log("Insert fail"); } // Improve error handling
+        }
+        )
+  }
+require('./locations');*/

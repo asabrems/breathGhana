@@ -1,12 +1,15 @@
+var mongoose = require('mongoose');
+var Loc = mongoose.model('Location');
+var User = mongoose.model('User');
 var request = require('request');
+
 var apiOptions = {
 server : "http://localhost:3000"
 };
 if (process.env.NODE_ENV === 'production') {
 apiOptions.server = "https://tranquil-brushlands-88878.herokuapp.com/";
 }
-var mongoose = require('mongoose');
-var Loc = mongoose.model('Location');
+
 var sendJsonResponse = function(res, status, content) {
     res.status(status);
     res.json(content);
@@ -16,7 +19,18 @@ module.exports.locationsCreate = function (req, res) {
     res.json({"status" : "success"});
 };
 module.exports.locationsListByDistance= function(req,res){
-
+    var lng = parseFloat(req.query.lng);
+    var lat = parseFloat(req.query.lat);
+    var point = {
+        type: "Point",
+        coordinates: [lng, lat]
+    };
+    var geoOptions = {
+        spherical: true,
+        maxDistance: theEarth.getRadsFromDistance(20),
+        num: 10
+    };
+    Loc.geoNear(point, geoOptions, callback);
 };
 module.exports.locationsUpdateOne= function(req,res){
     res.status(200);
@@ -41,6 +55,29 @@ module.exports.locationsReadOne = function(req, res) {
     } else {
             sendJsonResponse(res, 404, {
             "message": "No locationid in request"
+        });
+  }
+};
+module.exports.login = function(req, res) {
+    if (req.params && req.params.userid) {
+        User
+        .findById(req.params.userid)
+        .select('name email')
+        .exec(function(err, user) {
+        if (!user) {
+            sendJsonResponse(res, 404, {
+            "message": "userid not found"
+            });
+            return;
+        } else if (err) {
+            sendJsonResponse(res, 404, err);
+            return;
+            }
+            sendJsonResponse(res, 200, user);
+            });
+    } else {
+            sendJsonResponse(res, 404, {
+            "message": "No userid in request"
         });
   }
 };
@@ -72,4 +109,21 @@ module.exports.locationsCreate = function(req, res) {
             sendJsonResponse(res, 201, location);
         }
     });
+};
+
+
+module.exports.profileRead = function(req, res) {
+
+  if (!req.payload._id) {
+    res.status(401).json({
+      "message" : "UnauthorizedError: private profile"
+    });
+  } else {
+    User
+      .findById(req.payload._id)
+      .exec(function(err, user) {
+        res.status(200).json(user);
+      });
+  }
+
 };
