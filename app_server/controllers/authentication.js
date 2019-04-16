@@ -74,15 +74,15 @@ module.exports.login = function(req, res) {
         }
         if(user.email == 'charl@gmail.com'){ 
             token = user.generateJwt();
-
-            return res.redirect('/work');
-            //res.render('dashboard', { title: 'Dashboard', user: req.user });       
+            console.log("Christopher is a very baaaaaaaaaaaaaaaaaaaaaaaaaaaaad boy");
+            //return res.redirect('/work');
+            res.render('dashboard', { title: 'Dashboard', user: req.user });       
         //     sendJSONresponse(res, 200, {
         //         "token" : token                      
         // });
         } else {
             //sendJSONresponse(res, 401, info);
-            return res.redirect('/login');
+            return res.redirect('/');
         } 
     //     if(err){
     //         return next(err);
@@ -100,7 +100,7 @@ module.exports.login = function(req, res) {
 };
 module.exports.dashboard= function (req, res) {
     if (!req.user || req.user.status !== 'ENABLED') {
-      return res.redirect('/login');
+      return res.redirect('/');
     }
    
     res.render('dashboard', { title: 'Dashboard', user: req.user });

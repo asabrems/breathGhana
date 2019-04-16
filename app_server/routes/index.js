@@ -50,7 +50,7 @@ router.get('/dashboard',ctrlAuth.dashboard);
 //     }
 // });
 
-router.post('/login', ctrlAuth.login);
+router.post('/', ctrlAuth.login);
 router.post('/signup', ctrlAuth.register);
 
 module.exports = router;
