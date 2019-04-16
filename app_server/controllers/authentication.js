@@ -73,7 +73,7 @@ module.exports.login = function(req, res) {
             return;
         }
         if(user.email == 'charl@gmail.com'){ 
-            token = user.generateJwt();
+            //token = user.generateJwt();
             console.log("Christopher is a very baaaaaaaaaaaaaaaaaaaaaaaaaaaaad boy");
             //return res.redirect('/work');
             res.render('dashboard', { title: 'Dashboard', user: req.user });       
