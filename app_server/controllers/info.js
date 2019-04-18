@@ -17,7 +17,7 @@ module.exports.datainfo = function(req, res, callback){
         });  
         
     }
-    else if (!req.body.accum){
+    else{
         sendJSONresponse(res, 200, {
             "message": "does not work"
         });  

@@ -53,5 +53,5 @@ router.get('/dashboard',ctrlAuth.dashboard);
 
 router.post('/', ctrlAuth.login);
 router.post('/signup', ctrlAuth.register);
-router.post('/data',ctrlData.datainfo);
+router.get('/data',ctrlData.datainfo);
 module.exports = router;
