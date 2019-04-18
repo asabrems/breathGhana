@@ -6,10 +6,10 @@ var sendJSONresponse = function(res, status, content) {
 };
 module.exports.datainfo = function(req, res, callback){
     //-console.log(req.body)
+    var info = new data1();
+    info.accum = req.body.accum
     if(req.body.accum){
-        //console.log("njbsigr")
-        var info = new data1();
-        info.accum = req.body.accum
+        //console.log("njbsigr"        
         info.save()
         sendJSONresponse(res, 200, {
             "message": "works"
@@ -21,8 +21,6 @@ module.exports.datainfo = function(req, res, callback){
         sendJSONresponse(res, 200, {
             "message": "does not work"
         }); 
-        var info = new data1();
-        info.accum = req.body.accum
         info.save() 
         sendJSONresponse(res, 200, {
             "message": "saved"
