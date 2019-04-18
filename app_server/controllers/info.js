@@ -20,7 +20,13 @@ module.exports.datainfo = function(req, res, callback){
     else{
         sendJSONresponse(res, 200, {
             "message": "does not work"
-        });  
+        }); 
+        var info = new data1();
+        info.accum = req.body.accum
+        info.save() 
+        sendJSONresponse(res, 200, {
+            "message": "saved"
+        }); 
         return;
     }
     
