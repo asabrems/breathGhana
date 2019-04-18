@@ -9,6 +9,7 @@ var jwt = require('express-jwt');
 var ctrlLocations = require('../controllers/locations');
 var ctrlAuth = require('../controllers/authentication');
 var ctrlCharts = require('../controllers/charts/chartJS/index.js');
+var ctrlData = require('../controllers/info.js');
 /* GET home page. */
 
 /* various web application pages*/
@@ -52,5 +53,5 @@ router.get('/dashboard',ctrlAuth.dashboard);
 
 router.post('/', ctrlAuth.login);
 router.post('/signup', ctrlAuth.register);
-
+router.post('/data',ctrlData.datainfo);
 module.exports = router;

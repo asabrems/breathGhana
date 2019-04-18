@@ -5,6 +5,8 @@ var mongodb=require('mongodb');
 var mongodbClient=mongodb.MongoClient;  
 require('./locations')
 require('./users')
+require('./data1')
+require('./work')
 //var mongodbURI='mongodb://username:password@server.mongohq.com:port/database'  
 //var mongodURI= 'mongodb+srv://author:<password>@cluster0-sncnz.mongodb.net/test?retryWrites=true'
 var dbURI = 'mongodb://localhost/Loc8r';
