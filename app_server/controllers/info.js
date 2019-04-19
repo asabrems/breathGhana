@@ -5,12 +5,13 @@ var sendJSONresponse = function(res, status, content) {
     res.json(content);
 };
 module.exports.datainfo = function(req, res, callback){
-    //-console.log(req.body)
-    var info = new data1();
-    if(req.body.accum){
+    console.log(req.query['accum'])
+   
+
+    if(req.query['accum']){
         //console.log("njbsigr")
         var info = new data1();
-        
+        info.accum = req.query['accum']
         info.save()
         sendJSONresponse(res, 200, {
             "message": "works"
@@ -22,14 +23,21 @@ module.exports.datainfo = function(req, res, callback){
         sendJSONresponse(res, 200, {
             "message": "does not work"
         }); 
-        var info = new data1();
-        info.accum = req.body.accum
-        info.save() 
+        
         sendJSONresponse(res, 200, {
-            "message": "saved"
+            "message": "does not work"
         }); 
         return;
     }
     
    
 };
+
+module.exports.working = function(req, res){
+    if (req.params && req.params.numbers){
+        data1
+        .findByAccum(req.params.numbers)
+        
+
+    }
+}

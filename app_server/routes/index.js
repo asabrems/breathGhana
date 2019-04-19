@@ -15,6 +15,7 @@ var ctrlData = require('../controllers/info.js');
 /* various web application pages*/
 //router.get('/', ctrlLocations.homepage);
 router.get('/', ctrlLocations.login);
+router.get('/data',ctrlData.datainfo);
 router.get('/signup',ctrlLocations.signup);
 router.get('/work', ctrlLocations.work);
 //router.get('/graphs', ctrlCharts.charts);
@@ -53,5 +54,5 @@ router.get('/dashboard',ctrlAuth.dashboard);
 
 router.post('/', ctrlAuth.login);
 router.post('/signup', ctrlAuth.register);
-router.get('/data',ctrlData.datainfo);
+
 module.exports = router;
