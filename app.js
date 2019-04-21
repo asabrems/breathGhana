@@ -5,23 +5,23 @@ var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 //var favicon = require('serve-favicon');
-var bodyParser = require('body-parser');// this allows us to call auten into views
+var bodyParser = require('body-parser'); // this allows us to call auten into views
 
 //var uglifyJs = require("uglify-js");
 //var fs = require('fs');
-var passport= require('passport');
+var passport = require('passport');
 require('./app_server/models/db');
 require('./app_server/config/passport');
 require('./app_server/routes');
 
 var routes = require('./app_server/routes/index');
 //var routesApi = require('./app_api/routes/index');
-//var users = require('./app_server/routes/users');
+var users = require('./app_server/routes/users');
 
 var app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname,'app_server', 'views'));
+app.set('views', path.join(__dirname, 'app_server', 'views'));
 app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(express.json());
@@ -31,25 +31,23 @@ app.use(express.static(path.join(__dirname, 'public')));
 //app.use(express.static(path.join(__dirname, 'app_client')));
 app.use(passport.initialize());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routes (recomment to get sign in details)
 app.use('/', routes);
-//app.use('/users', users);
+app.use('/drivers', users);
 //app.use('/api', routesApi);
 
 /*app.use(function(req, res) {
   res.sendfile(path.join(__dirname, 'app_server', 'index.html'));
 });*/
 
-
-
 // error handlers
 // Catch unauthorised errors
-app.use(function (err, req, res, next) {
+app.use(function(err, req, res, next) {
   if (err.name === 'UnauthorizedError') {
     res.status(401);
-    res.json({"message" : err.name + ": " + err.message});
+    res.json({ message: err.name + ': ' + err.message });
   }
 });
 // catch 404 and forward to error handler
