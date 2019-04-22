@@ -3,8 +3,7 @@ var router = express.Router();
 var jwt = require('express-jwt');
 var { connect } = require('mqtt');
 var client = connect(process.env.CLOUDMQTT_URL);
-var deviceRoot = 'asantewaa/init'; //"demo/status/temperature"; //deviceroot is topic name given in arduino code
-var collection, client;
+var Fruit = require('../models/Fruit.js');
 var Log = require('../models/log');
 var Driver = require('../models/driver');
 var { waterfall } = require('async');
@@ -17,6 +16,7 @@ var ctrlLocations = require('../controllers/locations');
 var ctrlAuth = require('../controllers/authentication');
 var ctrlCharts = require('../controllers/charts/chartJS/index.js');
 var ctrlData = require('../controllers/info.js');
+var ctrlchart = require('../controllers/chart.js');
 /* GET home page. */
 
 /* various web application pages*/
@@ -27,10 +27,7 @@ router.get('/signup', ctrlLocations.signup);
 router.get('/work', ctrlLocations.work);
 //router.get('/graphs', ctrlCharts.charts);
 router.get('/dashboard', ctrlAuth.dashboard);
-// router.post('/signup', (req, res) => {
-//     console.log(req.body)
-//     res.send('hello');
-//});
+
 //router.post('/signup', ctrlLocations.loglist);
 // {
 //     const {name, email, password, newpassword}= req.body;
@@ -61,6 +58,7 @@ router.get('/dashboard', ctrlAuth.dashboard);
 
 router.post('/', ctrlAuth.login);
 router.post('/signup', ctrlAuth.register);
+router.get('/chart', ctrlchart.chart);
 
 router.get('/dailystats', (req, res, next) => {
   Log.aggregate(
@@ -80,7 +78,26 @@ router.get('/dailystats', (req, res, next) => {
     }
   );
 });
-
+router.get('/charts', (req, res, next) => {
+  db.log.aggregate(
+    [
+      {
+        $group: {
+          _id: {
+            //month: { $month: '$time' },
+            //day: { $dayOfMonth: '$time' },
+            passed: '$passed'
+          },
+          count: { $sum: 1 }
+        }
+      }
+    ],
+    function(err, result) {
+      if (err) return res.send(err);
+      return res.json(result);
+    }
+  );
+});
 client.once('connect', () => {
   client.subscribe('#', (err, granted) => {
     if (err) return console.error(err);
@@ -145,29 +162,30 @@ client.on('message', (topic, message) => {
     }
   );
 });
-function setupCollection(err, db) {
-  if (err) throw err;
-  collection = db.collection(data1); //name of the collection in the database
-  client = mqtt.connect({ host: 'm16.cloudmqtt.com', port: 10601 }); //connecting the mqtt server with the MongoDB database
 
-  client.subscribe(deviceRoot + '+'); //subscribing to the topic name
-  client.on('message', insertEvent); //inserting the event
-}
-//function that displays the data in the MongoDataBase
-function insertEvent(topic, message) {
-  var key = topic.replace(deviceRoot, '');
+/* GET page. */
 
-  collection.update(
-    { _id: key },
-    { $push: { events: { event: { value: message, when: new Date() } } } },
-    { upsert: true },
-
-    function(err, docs) {
-      if (err) {
-        console.log('Insert fail'); // Improve error handling
-      }
-    }
-  );
-}
+// router.get('/chart', function(req, res, next) {
+//   Fruit.find({})
+//     .select('name value -_id')
+//     .sort({ value: -1 })
+//     .limit(5)
+//     .exec(function(err, fruits) {
+//       if (err) return next(err);
+//       // chart JSON data
+//       var json = {
+//         chart: {
+//           type: 'pie',
+//           title: 'Top 5 Fruits',
+//           data: fruits,
+//           container: 'container'
+//         }
+//       };
+//       res.render('index1', {
+//         title: 'Anychart NodeJS demo',
+//         chartData: JSON.stringify(json)
+//       });
+//     });
+// });
 
 module.exports = router;

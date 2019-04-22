@@ -18,6 +18,12 @@ if (process.env.NODE_ENV === 'production') {
 }
 /*var deviceRoot="asantewaa/init"
 var collection,client;*/
+mongoose.Promise = require('bluebird');
+mongoose.connect('mongodb://localhost/anychart_db');
+mongoose.connection.on(
+  'error',
+  console.error.bind(console, 'Connection error:')
+);
 
 //{var mqtt = require('mqtt'); //includes mqtt server
 //var mongodb = require('mongodb'); // includes mongoDB
