@@ -36,22 +36,9 @@ router.get('/dailystats', (req, res, next) => {
         }
       }
     ],
-    /*(err, result) => {
+    (err, result) => {
       if (err) return res.send(err);
       return res.json(result);
-    }*/
-    function(err, result) {
-      var data_to_put_as_json = [];
-      for (i in result) {
-        var doc = result[i];
-        var resultObject = {};
-        resultObject.label = doc._id.passed;
-        (resultObject.value = doc._id.day), doc.count;
-        //resultObject.value = doc.count;
-        data_to_put_as_json.push(resultObject);
-      }
-      if (err) return res.send(err);
-      return res.json(data_to_put_as_json);
     }
   );
 });
@@ -153,3 +140,6 @@ client.on('message', (topic, message) => {
 });
 
 module.exports = router;
+/*note --- to find the various drunk test data recorded  
+try tid link in postman ---- localhost:3000/dailystats
+*/
