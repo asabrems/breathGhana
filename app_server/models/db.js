@@ -6,8 +6,6 @@ var mongodbClient = mongodb.MongoClient;
 //var data1 = mongoose.model('dataa');
 require('./users');
 require('./data1');
-require('./work');
-
 var dbURI = 'mongodb://localhost/Loc8r';
 if (process.env.NODE_ENV === 'production') {
   dbURI = process.env.MONGOLAB_URI;
