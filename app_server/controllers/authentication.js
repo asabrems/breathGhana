@@ -1,6 +1,5 @@
 var passport = require('passport');
 var mongoose = require('mongoose');
-var Loc = mongoose.model('Location');
 var User = mongoose.model('User');
 
 var getAuthor = function(req, res, callback) {
@@ -71,7 +70,7 @@ module.exports.login = function(req, res) {
     }
     if (user.email == 'charl@gmail.com') {
       //token = user.generateJwt();
-      return res.redirect('/chart');
+      return res.redirect('/grapes');
       //res.render('index1', { title: 'Dashboard', user: req.user });
       //     sendJSONresponse(res, 200, {
       //         "token" : token

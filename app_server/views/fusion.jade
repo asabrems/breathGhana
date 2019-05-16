@@ -1,0 +1,54 @@
+//-link to source code for the fusionchart html code 
+//-https://www.fusioncharts.com/dev/chart-guide/standard-charts/line-area-and-column-charts
+html
+  head
+    title= title
+    script(type='text/javascript', src='https://cdn.fusioncharts.com/fusioncharts/latest/fusioncharts.js')
+    script(type='text/javascript', src='https://cdn.fusioncharts.com/fusioncharts/latest/themes/fusioncharts.theme.fusion.js')
+    
+
+  body
+    #chart-container FusionCharts XT will load here!
+
+  script(type='text/javascript',src="https://code.jquery.com/jquery-3.4.1.js")
+  script(type='text/javascript').
+
+      var chartData;
+      $(function(){
+      $.ajax({
+        url: 'http://localhost:3000/dailystats',
+        //        url: 'http://localhost:3000/charts',
+        type: 'GET',
+        crossDomain: true,
+        success : function(data) {
+          chartData = data;
+          console.log(chartData)
+          FusionCharts.ready(function(){
+          var chartObj = new FusionCharts({
+          type: 'column2d',
+          renderAt: 'chart-container',
+          width: '550',
+          height: '350',
+          dataFormat: 'json',
+          dataSource: {
+            "chart": {
+            "theme": "fusion",
+            "caption": "drunk data",
+            "subCaption": "Last week",
+            "xAxisName": "months",
+            "yAxisName": "people",
+            "rotatevalues": "1",
+            "theme": "zune",
+            "lineThickness": "2"
+          },
+          "data":chartData,
+          }
+          });
+          chartObj.render();
+          });
+            }
+          });
+        });
+      
+      
+     

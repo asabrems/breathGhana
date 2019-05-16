@@ -1,9 +1,0 @@
-extends layout1
-
-block content
-  div(id="container")
-  script.
-    anychart.onDocumentReady(function () {
-      var chart = anychart.fromJson(!{chartData});
-      chart.draw();
-    });

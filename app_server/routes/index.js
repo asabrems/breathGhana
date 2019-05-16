@@ -1,91 +1,68 @@
 var express = require('express');
 var router = express.Router();
-var jwt = require('express-jwt');
 var { connect } = require('mqtt');
 var client = connect(process.env.CLOUDMQTT_URL);
-var Fruit = require('../models/Fruit.js');
 var Log = require('../models/log');
 var Driver = require('../models/driver');
 var { waterfall } = require('async');
-/*var auth = jwt({
-    secret: process.env.JWT_SECRET,
-    userProperty: 'payload'
-});*/
-
-var ctrlLocations = require('../controllers/locations');
 var ctrlAuth = require('../controllers/authentication');
-var ctrlCharts = require('../controllers/charts/chartJS/index.js');
 var ctrlData = require('../controllers/info.js');
-var ctrlchart = require('../controllers/chart.js');
+var ctrlLocations = require('../controllers/locations.js');
+
 /* GET home page. */
 
 /* various web application pages*/
-//router.get('/', ctrlLocations.homepage);
+
 router.get('/', ctrlLocations.login);
 router.get('/data', ctrlData.datainfo);
-router.get('/signup', ctrlLocations.signup);
-router.get('/work', ctrlLocations.work);
-//router.get('/graphs', ctrlCharts.charts);
+router.get('/grapes', ctrlLocations.graph1);
 router.get('/dashboard', ctrlAuth.dashboard);
-
-//router.post('/signup', ctrlLocations.loglist);
-// {
-//     const {name, email, password, newpassword}= req.body;
-//     let errors=[];
-//     if (!name || !email || !password || !newpassword){
-//         errors.push({   msg:'please fill in all fields'
-//     });
-//     }
-//     if(password !== newpassword){
-//         errors.push({ msg:"Ma guy the password for match" });
-
-//     }if(password.length < 6){
-//         errors.push({msg:'password should be at least 6 characters'});
-//     }
-//     if(errors.length>0){
-//         res.render('register',{
-//             errors,
-//             name,
-//             email,
-//             password,
-//             newpassword
-//         });
-//     }
-//      else{
-//         res.send('pass')
-//     }
-// });
 
 router.post('/', ctrlAuth.login);
 router.post('/signup', ctrlAuth.register);
-router.get('/chart', ctrlchart.chart);
 
+/*sorting data to be plotted*/
 router.get('/dailystats', (req, res, next) => {
   Log.aggregate(
-    {
-      $group: {
-        _id: {
-          month: { $month: '$time' },
-          day: { $dayOfMonth: '$time' },
-          passed: '$passed'
-        },
-        count: { $sum: 1 }
-      }
-    },
-    (err, result) => {
-      if (err) return res.send(err);
-      return res.json(result);
-    }
-  );
-});
-router.get('/charts', (req, res, next) => {
-  db.log.aggregate(
     [
       {
         $group: {
           _id: {
-            //month: { $month: '$time' },
-            //day: { $dayOfMonth: '$time' },
+            month: { $month: '$time' },
+            day: { $dayOfMonth: '$time' },
+            passed: '$passed'
+          },
+          count: { $sum: 1 }
+        }
+      }
+    ],
+    /*(err, result) => {
+      if (err) return res.send(err);
+      return res.json(result);
+    }*/
+    function(err, result) {
+      var data_to_put_as_json = [];
+      for (i in result) {
+        var doc = result[i];
+        var resultObject = {};
+        resultObject.label = doc._id.passed;
+        (resultObject.value = doc._id.day), doc.count;
+        //resultObject.value = doc.count;
+        data_to_put_as_json.push(resultObject);
+      }
+      if (err) return res.send(err);
+      return res.json(data_to_put_as_json);
+    }
+  );
+});
+/*link to database data sorting for fusion chart*/
+//https://javabeat.net/nodejs-fusioncharts-column-chart/
+router.get('/charts', (req, res, next) => {
+  Log.aggregate(
+    [
+      {
+        $group: {
+          _id: {
             passed: '$passed'
           },
           count: { $sum: 1 }
@@ -93,11 +70,23 @@ router.get('/charts', (req, res, next) => {
       }
     ],
     function(err, result) {
+      var data_to_put_as_json = [];
+      for (i in result) {
+        var doc = result[i];
+        var resultObject = {};
+        resultObject.label = doc._id.passed;
+        //resultObject.value1 = doc._id.day;
+        resultObject.value = doc.count;
+        data_to_put_as_json.push(resultObject);
+      }
       if (err) return res.send(err);
-      return res.json(result);
+      return res.json(data_to_put_as_json);
     }
   );
 });
+
+/*getting data from the mqtt broker */
+
 client.once('connect', () => {
   client.subscribe('#', (err, granted) => {
     if (err) return console.error(err);
@@ -162,30 +151,5 @@ client.on('message', (topic, message) => {
     }
   );
 });
-
-/* GET page. */
-
-// router.get('/chart', function(req, res, next) {
-//   Fruit.find({})
-//     .select('name value -_id')
-//     .sort({ value: -1 })
-//     .limit(5)
-//     .exec(function(err, fruits) {
-//       if (err) return next(err);
-//       // chart JSON data
-//       var json = {
-//         chart: {
-//           type: 'pie',
-//           title: 'Top 5 Fruits',
-//           data: fruits,
-//           container: 'container'
-//         }
-//       };
-//       res.render('index1', {
-//         title: 'Anychart NodeJS demo',
-//         chartData: JSON.stringify(json)
-//       });
-//     });
-// });
 
 module.exports = router;
