@@ -15,7 +15,7 @@ var ctrlLocations = require('../controllers/locations.js');
 
 router.get('/', ctrlLocations.login);
 router.get('/data', ctrlData.datainfo);
-router.get('/grapes', ctrlLocations.graph1);
+router.get('/records', ctrlLocations.graph1);
 router.get('/dashboard', ctrlAuth.dashboard);
 
 router.post('/', ctrlAuth.login);

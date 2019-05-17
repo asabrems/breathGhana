@@ -70,7 +70,7 @@ module.exports.login = function(req, res) {
     }
     if (user.email == 'charl@gmail.com') {
       //token = user.generateJwt();
-      return res.redirect('/grapes');
+      return res.redirect('/records');
       //res.render('index1', { title: 'Dashboard', user: req.user });
       //     sendJSONresponse(res, 200, {
       //         "token" : token
